@@ -1,0 +1,134 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Scraper Demo\"\n",
+        "format: html\n",
+        "jupyter: python3\n",
+        "---\n",
+        "\n",
+        "\n",
+        "# Scraper Demo: Crawl4AI + Polars\n"
+      ],
+      "id": "990d8b93"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import sys, os\n",
+        "sys.path.insert(0, os.path.abspath(\"src\"))"
+      ],
+      "id": "d3f4bfc8",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "This document demonstrates the scraping pipeline for a few sample URLs using the project modules.\n",
+        "\n",
+        "## 1. Extract Content URLs\n"
+      ],
+      "id": "bd3f089c"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "from url_extractor import extract_content_urls\n",
+        "urls = extract_content_urls(\"https://www.versnellingsplan.nl/kennisbank/\")\n",
+        "print(f\"Found {len(urls)} URLs:\")\n",
+        "for url in urls[:3]:\n",
+        "    print(url)"
+      ],
+      "id": "af05f951",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## 2. Scrape Content for a Sample URL\n"
+      ],
+      "id": "49b4e3af"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "from content_scraper import scrape_content\n",
+        "sample_url = urls[0] if urls else \"https://www.versnellingsplan.nl/kennisbank/some-article\"\n",
+        "content = scrape_content(sample_url)\n",
+        "print(content)"
+      ],
+      "id": "d2172638",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## 3. Download PDFs for the Sample URL\n"
+      ],
+      "id": "d99bfa60"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "from pdf_downloader import download_pdfs\n",
+        "pdfs = download_pdfs(content.get('pdf_links', []), \"output/demo/pdfs\")\n",
+        "print(pdfs)"
+      ],
+      "id": "47f368bb",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## 4. Generate JSON Output\n"
+      ],
+      "id": "e769fbe7"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "from json_generator import generate_json\n",
+        "json_path = generate_json(content, pdfs, \"output/demo\")\n",
+        "print(f\"JSON saved at: {json_path}\")"
+      ],
+      "id": "fea031a0",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "This demo shows the end-to-end workflow for scraping, PDF downloading, and JSON output using Crawl4AI and project modules."
+      ],
+      "id": "14aa3559"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
