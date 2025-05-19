@@ -1,0 +1,41 @@
+<context>
+# Overview
+I want to scrape the urls below https://www.versnellingsplan.nl/kennisbank/. On the link there are 100 links to pages that need to be scraped to be used in Generative AI chats.
+
+# Core Features
+Find all the 'content urls' below the given url, so the content can be scraped.
+The content urls might have different lay-out and text behind buttons. These needs to be handled. In addition, the content urls have pdf's, they need to be downloaded as well.
+
+
+# User Experience
+There should be an intermediate step with some raw data saved.
+The end result should be per content url a json with the metadata (date, type, etc), content (all the text within the page) and associated files, with links to the downloaded files.
+This end result must be easy to upload to a rag application.
+</context>
+<PRD>
+# Technical Architecture
+- a simpel quarto in the main repo that scrapes the ~100 content urls from the given url and for a few different of those content urls scrapes the information and downloads the associated files. This is basically an integration test.
+- pytest and a folder with unit tests
+- a src folder with the functions that execute the scraping etc. Those should be modular and one script that runs everything in order.
+- uv as package manager with uv.lock
+- output folder with several subfolders:
+  - logs with information about the process
+  - demo, this is where the quarto file saves its output
+  - test, this is where the unit tests save their output
+  - production, this is where the full functionality is reached.
+
+# Development Roadmap
+Break down the development process into phases:
+- First start with structure, pyproject.toml, and uv package management and ruff, add gitkeep to subfolders
+- Add modular functions and a quarto file that calls them.
+- Expand the tests, checks and scraping to ensure we get all the information
+
+
+# Logical Dependency Chain
+- Getting as quickly as possible to something usable/visible front end that works
+- Properly pacing and scoping each feature so it is atomic but can also be built upon and improved as development approaches
+
+# Risks and Mitigations
+- The content urls might first be scraped very limited, skip pages that are difficult
+
+</PRD>
