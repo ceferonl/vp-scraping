@@ -1,6 +1,5 @@
 import logging
-from crawl4ai import Crawler
-import crawl4ai.mdc as mdc
+from crawl4ai.crawler import Crawler
 
 def setup_logger():
     logger = logging.getLogger('content_scraper')

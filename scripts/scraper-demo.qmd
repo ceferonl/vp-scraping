@@ -6,17 +6,18 @@ jupyter: python3
 
 # Scraper Demo: Crawl4AI + Polars
 
-```{python}
-import sys, os
-sys.path.insert(0, os.path.abspath("src"))
-```
-
 This document demonstrates the scraping pipeline for a few sample URLs using the project modules.
 
 ## 1. Extract Content URLs
 
 ```{python}
-from url_extractor import extract_content_urls
+import sys
+import os
+
+# Add parent directory to path so we can import from src
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath("__file__"))))
+from src.url_extractor import extract_content_urls
+
 urls = extract_content_urls("https://www.versnellingsplan.nl/kennisbank/")
 print(f"Found {len(urls)} URLs:")
 for url in urls[:3]:
@@ -26,7 +27,8 @@ for url in urls[:3]:
 ## 2. Scrape Content for a Sample URL
 
 ```{python}
-from content_scraper import scrape_content
+from src.content_scraper import scrape_content
+
 sample_url = urls[0] if urls else "https://www.versnellingsplan.nl/kennisbank/some-article"
 content = scrape_content(sample_url)
 print(content)
@@ -35,16 +37,22 @@ print(content)
 ## 3. Download PDFs for the Sample URL
 
 ```{python}
-from pdf_downloader import download_pdfs
-pdfs = download_pdfs(content.get('pdf_links', []), "output/demo/pdfs")
+# Create output directory if it doesn't exist
+os.makedirs("../output/demo/pdfs", exist_ok=True)
+
+from src.pdf_downloader import download_pdfs
+pdfs = download_pdfs(content.get('pdf_links', []), "../output/demo/pdfs")
 print(pdfs)
 ```
 
 ## 4. Generate JSON Output
 
 ```{python}
-from json_generator import generate_json
-json_path = generate_json(content, pdfs, "output/demo")
+# Create output directory if it doesn't exist
+os.makedirs("../output/demo", exist_ok=True)
+
+from src.json_generator import generate_json
+json_path = generate_json(content, pdfs, "../output/demo")
 print(f"JSON saved at: {json_path}")
 ```
 
